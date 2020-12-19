@@ -3,7 +3,7 @@
     <!-- 头 -->
     <header>
       <h2
-        @dblclick="dblclick"
+        @click="dblclick"
         contenteditable="false"
       >小明的OKR</h2>
     </header>
@@ -274,6 +274,12 @@ export default defineComponent({
   width 100%
   height 100%
   padding 60px 60px 0
+  header
+    h2
+      outline none
+      &:focus
+        box-shadow 0 0 0 2px rgba(24, 144, 255, 0.2)
+        border-color #40a9ff
   main
     .target
       border 1px solid rgba(0, 0, 0, 0.32)
