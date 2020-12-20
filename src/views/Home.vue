@@ -81,8 +81,9 @@
         >
           <a-input
             id="ix"
+            @keyup.esc="isAdd = false"
             v-model:value="targerVal"
-            placeholder="请输入指标内容，按回车确认"
+            placeholder="请输入指标内容，按回车确认,esc取消"
             @pressEnter="addIndex(item)"
             @blur="addIndex(item)"
           ></a-input>
@@ -142,8 +143,9 @@
         v-if="isCreate"
       >
         <a-input
-          placeholder="请输入目标名称,按回车确认"
+          placeholder="请输入目标内容，按回车确认,esc取消"
           id="ip"
+          @keyup.esc="isCreate = false"
           v-model:value="title"
           @blur="addIndex"
           @pressEnter="addIndex"
