@@ -3,7 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 // import 'ant-design-vue/dist/antd.css'
-import { Button, Modal, Input, Popconfirm, InputNumber } from 'ant-design-vue'
+import {
+  Button,
+  Modal,
+  Input,
+  Popconfirm,
+  InputNumber,
+  Tooltip,
+  Popover
+} from 'ant-design-vue'
 
 createApp(App)
   .use(store)
@@ -13,4 +21,6 @@ createApp(App)
   .use(Input)
   .use(Popconfirm)
   .use(InputNumber)
+  .use(Tooltip)
+  .use(Popover)
   .mount('#app')
