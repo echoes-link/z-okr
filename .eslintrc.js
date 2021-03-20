@@ -16,7 +16,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 'quotes': [2, "single"],
     'semi': [2, "never"],
-    "no-var-requires": 0, // TSLint默认的rules里不允许使用require
+    '@typescript-eslint/no-var-requires': 0, // TSLint默认的rules里不允许使用require,可以禁止require标红
     'space-before-function-paren': 0,
     "camelcase": "off",
     "@typescript-eslint/camelcase": ["off"],

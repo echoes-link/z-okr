@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="home"
-    @click.capture="dblclick"
-  >
+  <div class="home">
     <!-- 头 -->
     <header>
       <h2
@@ -21,194 +18,172 @@
           <AimOutlined class="icon" />
           <span style="fontWeight: 700">{{item.name}}</span>
         </div>
-        <draggable v-model:value="item.children"></draggable>
-        <div
-          class="row"
-          v-for="(i,n) in item.children"
-          :key="i.id"
+        <draggable
+          :list="item.children"
+          item-key="id"
+          tag="transition-group"
+          :component-data="{
+            tag: 'div',
+            type: 'transition-group',
+            name: !drag ? 'flip-list' : null
+          }"
+          handle=".handle"
+          v-bind="dragOptions"
+          @start="drag = true"
+          @end="drag = false"
         >
-          <!-- 向上添加 -->
-          <div
-            class="put"
-            v-if="position === 'up' && del_index.in === n"
-          >
-            <a-input
-              id="up"
-              @keyup.esc="position = '';targerVal = ''"
-              v-model:value="targerVal"
-              placeholder="请输入指标内容，按回车确认,esc取消"
-              @pressEnter="addIndex(item)"
-              @blur="addIndex(item)"
-            ></a-input>
-          </div>
-          <div class="out">
-            <!-- 菜单按钮 -->
-            <div
-              class="task-icon"
-              @mouseenter="visibleTask"
-            >
-              <a-tooltip placement="top">
-                <template #title>
-                  <span>点击展示更多菜单</span>
-                </template>
-                <a-popover
-                  trigger="click"
-                  placement="bottomLeft"
-                >
-                  <template #content>
-                    <div
-                      class="tippy"
-                      @click="rename(idx,n,i.name)"
-                    >
-                      <div class="tippy-item">
-                        <div>
-                          <edit
-                            theme="outline"
-                            size="14"
-                            fill="#aeafb2"
-                          />
-                        </div>
-                        <div style="color:#333">重命名</div>
-                      </div>
-                    </div>
-                    <div
-                      class="tippy"
-                      @click="createTask('up',item.children,n,idx)"
-                    >
-                      <div class="tippy-item">
-                        <div>
-                          <arrow-up
-                            theme="outline"
-                            size="14"
-                            fill="#aeafb2"
-                          />
-                        </div>
-                        <div>在上方创建任务</div>
-                      </div>
-                    </div>
-                    <div
-                      class="tippy"
-                      @click="createTask('down',item.children,n,idx)"
-                    >
-                      <div class="tippy-item">
-                        <div>
-                          <arrow-down
-                            theme="outline"
-                            size="14"
-                            fill="#aeafb2"
-                          />
-                        </div>
-                        <div>在下方创建任务</div>
-                      </div>
-                    </div>
-                    <div class="split"></div>
-                    <div
-                      class="tippy"
-                      @click="isDel = true;del_index = {val:item.children,in:n}"
-                    >
-                      <div class="tippy-item">
-                        <div>
-                          <delete
-                            theme="outline"
-                            size="14"
-                            fill="#aeafb2"
-                          />
-                        </div>
-                        <div>删除</div>
-                      </div>
-                    </div>
-                  </template>
-                  <more-one
-                    style="display: flex"
-                    theme="outline"
-                    size="18"
-                    fill="#333"
-                    @click="index=idx;index1=n"
-                  />
-                </a-popover>
-              </a-tooltip>
-
-            </div>
-            <div class="index">
-              <!-- <div
-                class="arrow"
-                v-if="isToggle"
-              >
-                <ArrowUpOutlined
-                  style="marginRight: 5px"
-                  @click="toggleIndex(item.children, n, 'on')"
-                  v-if="n !== 0 "
-                />
-                <StopOutlined
-                  v-else
-                  style="marginRight: 5px;color:#c73a3a"
-                />
-                <ArrowDownOutlined
-                  @click="toggleIndex(item.children, n, 'down')"
-                  v-if="n !== item.children.length - 1 "
-                />
-                <StopOutlined
-                  v-else
-                  style="color:#c73a3a"
-                />
-              </div> -->
-              <div class="index-title">
-                <i></i>
-                <span style="marginRight: 10px">{{i.name}}</span>
-                <span @click="rename(idx,n,i.name)">
-                  <write
-                    theme="outline"
-                    size="14"
-                    fill="#aeafb2"
-                  />
-                </span>
-              </div>
+          <template #item="{ element, index }">
+            <div class="row">
               <div
-                class="index-title-input"
-                :id="'a'+idx+n"
+                class="put"
+                v-if="position === 'up' && del_index.in === index"
               >
                 <a-input
-                  v-model:value="i.name"
-                  @keyup.esc="cancelEdit($event,i,false)"
-                  @blur="cancelEdit"
-                  @pressEnter="cancelEdit"
+                  id="up"
+                  @keyup.esc="position = '';targerVal = ''"
+                  v-model:value="targerVal"
+                  placeholder="请输入指标内容，按回车确认,esc取消"
+                  @pressEnter="addIndex(item)"
+                  @blur="addIndex(item)"
                 ></a-input>
               </div>
-              <div style="marginRight:10px">
-                <PieChartOutlined style="marginRight: 5px" />
-                <span v-if="!i.disbled">{{i.schedule}}%</span>
-                <a-input-number
-                  v-else
-                  :min="0"
-                  :max="100"
-                  size="small"
-                  v-model:value="i.schedule"
-                  @blur="i.disbled = false"
-                ></a-input-number>
+              <div class="out">
+                <div class="task-icon">
+                  <a-tooltip placement="top">
+                    <template #title>
+                      <span>点击展示更多菜单</span>
+                    </template>
+                    <a-popover
+                      trigger="click"
+                      placement="bottomLeft"
+                    >
+                      <template #content>
+                        <div
+                          class="tippy"
+                          @click="rename(idx,index,element.name)"
+                        >
+                          <div class="tippy-item">
+                            <div>
+                              <edit
+                                theme="outline"
+                                size="14"
+                                fill="#aeafb2"
+                              />
+                            </div>
+                            <div style="color:#333">重命名</div>
+                          </div>
+                        </div>
+                        <div
+                          class="tippy"
+                          @click="createTask('up',item.children,index,idx)"
+                        >
+                          <div class="tippy-item">
+                            <div>
+                              <arrow-up
+                                theme="outline"
+                                size="14"
+                                fill="#aeafb2"
+                              />
+                            </div>
+                            <div>在上方创建任务</div>
+                          </div>
+                        </div>
+                        <div
+                          class="tippy"
+                          @click="createTask('down',item.children,index,idx)"
+                        >
+                          <div class="tippy-item">
+                            <div>
+                              <arrow-down
+                                theme="outline"
+                                size="14"
+                                fill="#aeafb2"
+                              />
+                            </div>
+                            <div>在下方创建任务</div>
+                          </div>
+                        </div>
+                        <div class="split"></div>
+                        <div
+                          class="tippy"
+                          @click="isDel = true;del_index = {val:item.children,in:index}"
+                        >
+                          <div class="tippy-item">
+                            <div>
+                              <delete
+                                theme="outline"
+                                size="14"
+                                fill="#aeafb2"
+                              />
+                            </div>
+                            <div>删除</div>
+                          </div>
+                        </div>
+                      </template>
+                      <span class="handle">
+                        <more-one
+                          style="display: flex"
+                          theme="outline"
+                          size="18"
+                          fill="#333"
+                          @click="Index=idx;index1=index"
+                        />
+
+                      </span>
+                    </a-popover>
+                  </a-tooltip>
+                </div>
+
+                <div class="index">
+                  <div class="index-title">
+                    <i></i>
+                    <span style="marginRight: 10px">{{element.name}}</span>
+                    <span @click="rename(idx,index,element.name)">
+                      <write
+                        theme="outline"
+                        size="14"
+                        fill="#aeafb2"
+                      />
+                    </span>
+                  </div>
+                  <div
+                    class="index-title-input"
+                    :id="'a'+idx+index"
+                  >
+                    <a-input
+                      v-model:value="element.name"
+                      @keyup.esc="cancelEdit($event,element,false)"
+                      @blur="cancelEdit($event,element,true)"
+                      @pressEnter="cancelEdit($event,element,true)"
+                    ></a-input>
+                  </div>
+
+                </div>
+              </div>
+              <div
+                class="put"
+                v-if="position === 'down' && del_index.in === index"
+              >
+                <a-input
+                  id="down"
+                  @keyup.esc="position = '';targerVal = ''"
+                  v-model:value="targerVal"
+                  placeholder="请输入指标内容，按回车确认,esc取消"
+                  @pressEnter="addIndex(item)"
+                  @blur="addIndex(item)"
+                ></a-input>
               </div>
             </div>
-          </div>
-          <!-- 向下添加 -->
-          <div
-            class="put"
-            v-if="position === 'down' && del_index.in === n"
-          >
-            <a-input
-              id="down"
-              @keyup.esc="isAdd = false"
-              v-model:value="targerVal"
-              placeholder="请输入指标内容，按回车确认,esc取消"
-              @pressEnter="addIndex(item)"
-              @blur="addIndex(item)"
-            ></a-input>
-          </div>
-        </div>
+          </template>
+        </draggable>
+
         <div
           class="put"
-          v-show="isAdd && index === idx"
+          v-show="isAdd && Index === idx"
         >
           <a-input
             id="ix"
+            autofocus="autofocus"
             @keyup.esc="isAdd = false"
             v-model:value="targerVal"
             placeholder="请输入指标内容，按回车确认,esc取消"
@@ -219,31 +194,12 @@
         <div class="down">
           <a-button
             size="small"
-            @click="isAdd = true; index = idx;focusOn('b')"
+            @click="focusOn('b',idx)"
           >
             <template #icon>
               <PlusSquareOutlined />
             </template>添加指标
           </a-button>
-          <!-- <a-button
-            size="small"
-            v-if="!isToggle"
-            :disabled="item.children.length <= 1"
-            @click="isToggle = true"
-          >
-            <template #icon>
-              <SwapOutlined :rotate="90" />
-            </template>更换指定顺序
-          </a-button> -->
-          <!-- <a-button
-            size="small"
-            v-else
-            @click="isToggle = false"
-          >
-            <template #icon>
-              <CheckCircleOutlined />
-            </template>完成
-          </a-button> -->
           <a-button
             size="small"
             @click="edit(idx)"
@@ -316,7 +272,6 @@ import { defineComponent, nextTick, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import {
   AimOutlined,
-  PieChartOutlined,
   PlusSquareOutlined,
   BookOutlined,
   DeleteOutlined,
@@ -334,57 +289,59 @@ import {
 
 interface List {
   name: string
-  // children: { name: string; schedule: number; disbled: boolean }[]
+  id: string
   children: { [key: string]: string | number | boolean }[]
 }
 
 export default defineComponent({
   name: 'Home',
+  display: 'Handle',
+  instruction: 'Drag using the handle icon',
+  order: 5,
   components: {
     AimOutlined,
-    PieChartOutlined,
+    // PieChartOutlined,
     PlusSquareOutlined,
     BookOutlined,
     DeleteOutlined,
     PlusOutlined,
     MoreOne,
     Delete,
-    Edit,
     ArrowUp,
     ArrowDown,
+    Edit,
     Write,
     draggable
   },
   setup() {
     const target_list = ref<List[]>([
-      {
-        name: '目标1',
-        children: [
-          {
-            name: '指标1',
-            schedule: 0,
-            disbled: false,
-            id: Math.random().toString(36).substr(2)
-          }
-        ]
-      }
+      // {
+      //   name: '目标1',
+      //   id: Math.random().toString(36).substr(2),
+      //   children: [
+      //     {
+      //       name: '指标1',
+      //       schedule: 0,
+      //       disbled: false,
+      //       id: Math.random().toString(36).substr(2)
+      //     }
+      //   ]
+      // }
     ])
-    const dblclick = (e: any) => {
-      // e.target.setAttribute('contenteditable', 'true')
-      console.log('aaaaaaaaaaaaa')
-    }
+
     const del_index = reactive({ val: [], in: 0 })
     const editName = ref<string>('')
     const targerVal = ref<string>('')
     const isAdd = ref<boolean>(false)
     const title = ref<string>('')
     const isCreate = ref<boolean>(false)
-    const index = ref(999)
+    const Index = ref(999)
     const index1 = ref(999)
     const isDel = ref(false)
     const position = ref('')
+    const drag = ref(false)
     // 编辑框聚焦
-    const focusOn = (z: string) => {
+    const focusOn = (z: string, n: number) => {
       if (z === 'a') {
         isCreate.value = true
         nextTick(() => {
@@ -393,6 +350,8 @@ export default defineComponent({
         })
       }
       if (z === 'b') {
+        targerVal.value = ''
+        Index.value = n
         isAdd.value = true
         nextTick(() => {
           const dom: any = document.getElementById('ix')
@@ -400,8 +359,16 @@ export default defineComponent({
         })
       }
     }
+    // 拖拽配置项
+    const dragOptions = {
+      animation: 200,
+      group: 'description',
+      disabled: false,
+      ghostClass: 'ghost'
+    }
     // 在上下方创建任务
     const createTask = (pos: string, val: [], i: number, i1: number) => {
+      console.log(pos, val, i, i1)
       position.value = pos
       del_index.val = val
       del_index.in = i
@@ -412,7 +379,6 @@ export default defineComponent({
         dom && dom.focus()
       })
     }
-    // 在上下方创建任务
     // 菜单栏消失
     const visibleTask = () => {
       const dom = document.querySelectorAll(
@@ -424,8 +390,9 @@ export default defineComponent({
     }
     // 重命名
     const rename = (i1: number, i2: number, name: string) => {
+      console.log(i1, i2, name)
       editName.value = name
-      index.value = i1
+      Index.value = i1
       index1.value = i2
       visibleTask()
       const dom = document.querySelectorAll(
@@ -442,6 +409,7 @@ export default defineComponent({
     // 取消编辑
     const cancelEdit = (e: any, name: { [key: string]: string }, b = true) => {
       !b && (name.name = editName.value)
+      console.log(name.name)
       e.target.parentNode.setAttribute('style', 'display:none')
       e.target.parentNode.previousElementSibling.setAttribute(
         'style',
@@ -461,7 +429,13 @@ export default defineComponent({
       message.success('删除成功', 1)
     }
     // 添加新目标或指标
-    const addIndex = (item: List = { name: '', children: [] }) => {
+    const addIndex = (
+      item: List = {
+        name: '',
+        children: [],
+        id: ''
+      }
+    ) => {
       if (position.value === 'up') {
         item.children.splice(del_index.in, 0, {
           name: targerVal.value !== '' ? targerVal.value : '新指标',
@@ -470,6 +444,7 @@ export default defineComponent({
           id: Math.random().toString(36).substr(2)
         })
         position.value = ''
+        targerVal.value = ''
       }
       if (position.value === 'down') {
         item.children.splice(del_index.in + 1, 0, {
@@ -479,8 +454,10 @@ export default defineComponent({
           id: Math.random().toString(36).substr(2)
         })
         position.value = ''
+        targerVal.value = ''
       }
       if (isAdd.value) {
+        console.log('aaaaaaaa', item.children)
         targerVal.value &&
           item.children.push({
             name: targerVal.value,
@@ -496,16 +473,19 @@ export default defineComponent({
             id: Math.random().toString(36).substr(2)
           })
         isAdd.value = false
+        targerVal.value = ''
       }
       if (isCreate.value) {
         title.value &&
           target_list.value.push({
             name: title.value,
+            id: Math.random().toString(36).substr(2),
             children: []
           })
         title.value ||
           target_list.value.push({
             name: '新目标',
+            id: Math.random().toString(36).substr(2),
             children: []
           })
         isCreate.value = false
@@ -520,7 +500,6 @@ export default defineComponent({
         arr[i].disbled = true
       })
     }
-
     watch(isDel, (v) => {
       v && visibleTask()
     })
@@ -532,13 +511,12 @@ export default defineComponent({
       targerVal,
       delTar,
       isAdd,
-      index,
+      Index,
       index1,
       edit,
       delIndex,
       toggleIndex,
       isToggle,
-      dblclick,
       addIndex,
       focusOn,
       rename,
@@ -547,7 +525,9 @@ export default defineComponent({
       isDel,
       del_index,
       position,
-      createTask
+      createTask,
+      dragOptions,
+      drag
     }
   }
 })

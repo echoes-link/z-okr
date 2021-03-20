@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+// import store from './store'
 // import 'ant-design-vue/dist/antd.css'
+// import antd from 'ant-design-vue'
 import {
   Button,
   Modal,
@@ -14,8 +15,9 @@ import {
 } from 'ant-design-vue'
 
 createApp(App)
-  .use(store)
+  // .use(store)
   .use(router)
+  // .use(antd)
   .use(Button)
   .use(Modal)
   .use(Input)
