@@ -11,12 +11,12 @@
     <main>
       <div
         class="target"
-        v-for="(item,idx) in target_list"
+        v-for="(item, idx) in target_list"
         :key="item.name"
       >
         <div class="title">
           <AimOutlined class="icon" />
-          <span style="fontWeight: 700">{{item.name}}</span>
+          <span style="fontWeight: 700">{{ item.name }}</span>
         </div>
         <draggable
           :list="item.children"
@@ -60,7 +60,7 @@
                       <template #content>
                         <div
                           class="tippy"
-                          @click="rename(idx,index,element.name)"
+                          @click="rename(idx, index, element.name)"
                         >
                           <div class="tippy-item">
                             <div>
@@ -75,7 +75,7 @@
                         </div>
                         <div
                           class="tippy"
-                          @click="createTask('up',item.children,index,idx)"
+                          @click="createTask('up', item.children, index, idx)"
                         >
                           <div class="tippy-item">
                             <div>
@@ -90,7 +90,7 @@
                         </div>
                         <div
                           class="tippy"
-                          @click="createTask('down',item.children,index,idx)"
+                          @click="createTask('down', item.children, index, idx)"
                         >
                           <div class="tippy-item">
                             <div>
@@ -106,7 +106,7 @@
                         <div class="split"></div>
                         <div
                           class="tippy"
-                          @click="isDel = true;del_index = {val:item.children,in:index}"
+                          @click="isDel = true; del_index = { val: item.children, in: index } "
                         >
                           <div class="tippy-item">
                             <div>
@@ -126,9 +126,10 @@
                           theme="outline"
                           size="18"
                           fill="#333"
-                          @click="Index=idx;index1=index"
+                          @click="Index = idx;
+                            index1 = index
+                          "
                         />
-
                       </span>
                     </a-popover>
                   </a-tooltip>
@@ -137,8 +138,8 @@
                 <div class="index">
                   <div class="index-title">
                     <i></i>
-                    <span style="marginRight: 10px">{{element.name}}</span>
-                    <span @click="rename(idx,index,element.name)">
+                    <span style="marginRight: 10px">{{ element.name }}</span>
+                    <span @click="rename(idx, index, element.name)">
                       <write
                         theme="outline"
                         size="14"
@@ -148,16 +149,15 @@
                   </div>
                   <div
                     class="index-title-input"
-                    :id="'a'+idx+index"
+                    :id="'a' + idx + index"
                   >
                     <a-input
                       v-model:value="element.name"
-                      @keyup.esc="cancelEdit($event,element,false)"
-                      @blur="cancelEdit($event,element,true)"
-                      @pressEnter="cancelEdit($event,element,true)"
+                      @keyup.esc="cancelEdit($event, element, false)"
+                      @blur="cancelEdit($event, element, true)"
+                      @pressEnter="cancelEdit($event, element, true)"
                     ></a-input>
                   </div>
-
                 </div>
               </div>
               <div
@@ -166,7 +166,7 @@
               >
                 <a-input
                   id="down"
-                  @keyup.esc="position = '';targerVal = ''"
+                  @keyup.esc=" position = '';targerVal = '' "
                   v-model:value="targerVal"
                   placeholder="请输入指标内容，按回车确认,esc取消"
                   @pressEnter="addIndex(item)"
@@ -194,7 +194,7 @@
         <div class="down">
           <a-button
             size="small"
-            @click="focusOn('b',idx)"
+            @click="focusOn('b', idx)"
           >
             <template #icon>
               <PlusSquareOutlined />
@@ -251,17 +251,19 @@
       okText="确认"
       cancelText="取消"
       @cancel="isDel = false"
-      @ok="delIndex(del_index.val,del_index.in)"
+      @ok="delIndex(del_index.val, del_index.in)"
     >
       <img
         src="../assets/del.png"
         width="100"
         height="100"
         style="marginRight:24px"
-      >
+      />
       <div>
         <div style="fontSize:20px;fontWeight:500">确认删除任务?</div>
-        <div style="marginTop:8px;lineHeight:1.5;fontSize:16px;color:#999">删除的任务会被移动到回收站中，你可以在回收站中恢复此操作</div>
+        <div style="marginTop:8px;lineHeight:1.5;fontSize:16px;color:#999">
+          删除的任务会被移动到回收站中，你可以在回收站中恢复此操作
+        </div>
       </div>
     </a-modal>
   </div>
@@ -533,5 +535,5 @@ export default defineComponent({
 })
 </script>
 
-<style src="./ant.styl" lang="stylus" ></style>
-<style src="./Home.styl" lang="stylus" scoped ></style>
+<style src="./ant.styl" lang="stylus"></style>
+<style src="./Home.styl" lang="stylus" scoped></style>

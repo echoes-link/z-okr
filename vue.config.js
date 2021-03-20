@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   publicPath: './',
+  outputDir: 'docs',
   configureWebpack: {
     plugins: [
       new BundleAnalyzerPlugin(),
