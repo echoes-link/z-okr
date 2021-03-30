@@ -24,6 +24,12 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
+# preview
+<https://https://echoes-link.github.io/z-okr/#/>
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2021, lijiachen
+
