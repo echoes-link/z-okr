@@ -25,7 +25,7 @@ npm run lint
 ```
 
 # preview
-<https://https://echoes-link.github.io/z-okr/#/>
+<https://echoes-link.github.io/z-okr/#/>
 
 # License
 
