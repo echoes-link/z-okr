@@ -1,0 +1,206 @@
+@mixin flex($ai) {
+  display: flex;
+  align-items: $ai;
+}
+@mixin front($content, $pos, $bg) {
+  content: $content;
+  position: $pos;
+  background: $bg;
+}
+// 内容区
+.ObjectiveCard {
+  background: #fff;
+  border: 1px solid #ebecf0;
+  border-radius: 4px;
+  box-shadow: 0 8px 8px 0 rgba(235, 236, 240, 0.2);
+  margin-bottom: 24px;
+  // 目标名称
+  .obj_input {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border: 1px solid transparent; // 透明
+    border-bottom-color: #ebecf0;
+    .obj_input_cont {
+      flex: 1;
+      @include flex(flex-start);
+      position: relative;
+      margin-left: 24px;
+      .i-icon-target {
+        position: absolute;
+        height: 16px;
+        left: -24px;
+        top: 10px;
+        bottom: 6;
+      }
+      .ant-input {
+        height: 34px !important;
+        position: relative;
+        margin-right: 16px;
+        margin-left: -4px;
+        padding: 5px 4px;
+        width: calc(100vw - 590px);
+        min-width: 480px;
+        box-shadow: inset 0 1px 0 0 #ebecf0;
+        border: 1px solid #aeafb2;
+        border-radius: 4px;
+        line-height: 22px;
+        word-break: unset;
+        outline: none;
+        background-color: transparent;
+        resize: none;
+        overflow: hidden;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        font-family: inherit;
+        border: 1px solid transparent !important;
+        box-shadow: none !important;
+        text-align: justify;
+        word-break: break-all;
+      }
+    }
+    .score {
+      max-width: 100px;
+      margin-left: 16px;
+      color: #333;
+    }
+  }
+  .focus-input {
+    border-radius: 4px;
+    border-color: #494bbf;
+  }
+  // 指标部分
+  .KeyResult {
+    position: relative;
+    &::after {
+      @include front('', absolute, #ebecf0);
+      left: 40px;
+      right: 16px;
+      bottom: 0;
+      height: 1px;
+    }
+    .key_res_info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      min-height: 48px;
+      padding: 0 16px 0 40px;
+      &::before {
+        @include front('', absolute, #494bbf);
+        width: 6px;
+        height: 6px;
+        top: 24px;
+        left: 40px;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        .ant-input {
+          font-size: 14px;
+          color: #333;
+          margin: 12px 16px;
+          min-width: 480px;
+          width: calc(100vw - 620px);
+          padding: 1px 0;
+          border: 0 !important;
+          box-shadow: none !important;
+          line-height: 20px;
+        }
+      }
+      .key_res_act {
+        @include flex(center);
+        & > div {
+          cursor: pointer;
+          .i-icon {
+            height: 16px;
+            line-height: 0;
+          }
+          &:hover {
+            span {
+              color: #494bbf !important;
+            }
+          }
+        }
+        .key_res_del {
+          @include flex(center);
+          color: #aeafb2;
+        }
+        // 权重
+        .key_res_weight {
+          margin-left: 32px;
+          width: 100px;
+          font-size: 16px;
+          color: #aeafb2;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          border-radius: 4px;
+          span {
+            &:last-child {
+              color: #333;
+            }
+          }
+        }
+        // 评分
+        .key_res_score {
+          margin-right: -12px;
+          border-radius: 4px;
+          font-size: 16px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          font-weight: 400;
+          .score_input {
+            height: 32px;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-radius: 4px;
+            .ant-input-number {
+              width: 48px;
+              min-width: 48px;
+              padding: 0 12px;
+              height: 100%;
+              text-align: right;
+              color: #333;
+              .ant-input-number-handler-wrap {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+    &:hover {
+      background: #f9f9f9;
+      .score_input {
+        border: 1px solid hsla(0, 0%, 80%, 0.7) !important;
+      }
+    }
+  }
+  // 操作部分
+  .ObjectActions {
+    margin: 0 24px 0 40px;
+    height: 56px;
+    @include flex(center);
+    .ant-btn {
+      margin-right: 12px;
+      border: 1px solid hsla(0, 0%, 80%, 0.7);
+      border-radius: 4px;
+      background-color: #fff;
+      display: inline-flex;
+      align-items: center;
+      color: rgba(0, 0, 0, 0.85);
+      &:hover {
+        background-color: hsla(0, 0%, 80%, 0.1);
+      }
+      .i-icon {
+        height: 16px;
+        line-height: 1;
+        margin-right: 4px;
+      }
+    }
+  }
+}

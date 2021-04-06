@@ -1,0 +1,23 @@
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": "css"
+      },
+      "antd"
+    ],
+    [
+      "import",
+      {
+        "libraryName": "@byte-design/icons",
+        "libraryDirectory": "icons",
+        "camel2DashComponentName": false // default: true
+      },
+      "icons"
+    ]
+  ]
+}
