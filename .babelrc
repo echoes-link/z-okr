@@ -18,6 +18,12 @@
         "camel2DashComponentName": false // default: true
       },
       "icons"
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
     ]
   ]
 }

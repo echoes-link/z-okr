@@ -1,5 +1,5 @@
 @mixin flex($ai) {
-  display: flex;
+  display: flex !important;
   align-items: $ai;
 }
 @mixin front($content, $pos, $bg) {
@@ -7,6 +7,8 @@
   position: $pos;
   background: $bg;
 }
+$purple: #494bbf;
+
 // 内容区
 .ObjectiveCard {
   background: #fff;
@@ -66,9 +68,10 @@
       color: #333;
     }
   }
+  // 输入框聚焦态
   .focus-input {
     border-radius: 4px;
-    border-color: #494bbf;
+    border-color: $purple;
   }
   // 指标部分
   .KeyResult {
@@ -88,7 +91,7 @@
       min-height: 48px;
       padding: 0 16px 0 40px;
       &::before {
-        @include front('', absolute, #494bbf);
+        @include front('', absolute, $purple);
         width: 6px;
         height: 6px;
         top: 24px;
@@ -117,12 +120,13 @@
           }
           &:hover {
             span {
-              color: #494bbf !important;
+              color: $purple !important;
             }
           }
         }
+        // 删除
         .key_res_del {
-          @include flex(center);
+          display: none;
           color: #aeafb2;
         }
         // 权重
@@ -175,9 +179,42 @@
     }
     &:hover {
       background: #f9f9f9;
+      .key_res_del {
+        @include flex(center);
+        color: $purple;
+      }
       .score_input {
         border: 1px solid hsla(0, 0%, 80%, 0.7) !important;
       }
+    }
+  }
+  // 进展
+  .ObjectProgress {
+    border-bottom: 1px solid #ebecf0;
+    margin: 0 16px 0 40px;
+    padding: 14px 0 12px;
+    .progress_header {
+      @include flex(center);
+      font: weight 500px;
+      font-size: 14px;
+      margin-bottom: 5px;
+      height: 20px;
+      justify-content: flex-start;
+      .i-icon {
+        height: 16px;
+        line-height: 1;
+        margin-right: 8px;
+      }
+    }
+    pre {
+      margin-top: 8px;
+      margin-bottom: 4px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: normal;
+      word-break: break-all;
+      white-space: break-spaces;
     }
   }
   // 操作部分
@@ -200,6 +237,43 @@
         height: 16px;
         line-height: 1;
         margin-right: 4px;
+      }
+    }
+  }
+}
+// 弹窗
+.ant-modal-content {
+  width: 520px;
+  min-height: 244px;
+  padding-bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 8px !important;
+  .ant-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 32px 32px;
+    border-top: none;
+    .ant-btn {
+      height: 40px;
+      min-width: 88px;
+      max-width: 88px;
+      border-radius: 4px;
+      padding: 0 16px;
+      border: 1px solid hsla(0, 0%, 80%, 0.7);
+      color: rgba(0, 0, 0, 0.85);
+      &:hover {
+        background: hsla(0, 0%, 80%, 0.1);
+      }
+    }
+    .ant-btn-primary {
+      background: $purple;
+      color: #fff;
+      &:hover {
+        background: rgba(73, 75, 191, 0.85);
       }
     }
   }
