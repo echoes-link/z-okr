@@ -1,7 +1,7 @@
+import { Add, Bill, ChartPie, Delete, SortThree, Target } from '@icon-park/react'
+import { Button, Input, InputNumber, Modal, Popover } from 'antd'
 import React from 'react'
 import './index.scss'
-import { Target, ChartPie, Delete, Add, SortThree, Bill } from '@icon-park/react'
-import { Input, InputNumber, Popover, Button, Modal } from 'antd'
 const { TextArea } = Input
 
 const tip = <p>双月结束时填写指标得分,分数再0.0~1之间</p>
@@ -11,7 +11,10 @@ const indexTip = <div>点击填写指标权重</div>
 const Dialog = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false)
   const showModal = () => setIsModalVisible(true)
-  const handleOk = () => setIsModalVisible(false)
+  const handleOk = () => {
+    setIsModalVisible(false)
+    props.delIndex(props.index)
+  }
   const handleCancel = () => setIsModalVisible(false)
   let button
   if (props.type === '目标') {
@@ -82,8 +85,8 @@ class Targrts extends React.Component {
     } else {
       return (
         <div className="ObjectActions">
-          <Button>
-            <Add theme="outline" size="16" fill="#aeafb2" onClick={} />
+          <Button onClick={this.addIndex}>
+            <Add theme="outline" size="16" fill="#aeafb2" />
             添加指标
           </Button>
           <Button>
@@ -100,9 +103,25 @@ class Targrts extends React.Component {
     }
   }
 
+  /**
+   * @description 删除指标
+   * @param {number} i 下标
+   */
+  delQueto = i => {
+    const lists = this.state.queto
+    lists.splice(i, 1)
+    this.setState({ queto: lists })
+  }
+
   // 新增指标
   addIndex = () => {
-    const indexs = this.state.queto.push({ name: '', score: 0.0, weight: '100.00%' })
+    const indexs = this.state.queto
+    indexs.push({
+      name: '',
+      score: 0.0,
+      weight: '100.00%',
+      id: Math.random().toString(36).substr(2)
+    })
     this.setState({ queto: indexs })
   }
 
@@ -131,8 +150,68 @@ class Targrts extends React.Component {
     }
   }
 
+  /**
+   * @description onChange事件的回调
+   * @param {number} index 下标
+   * @param {string} name 属性
+   * @param {event} e event对象
+   */
+  handleName = (index, name, e) => {
+    console.log(e)
+    const list = this.state.queto
+    if (name === 'name') list[index][name] = e.target.value
+    else if (name === 'score') list[index][name] = e
+    this.setState({ queto: list })
+  }
+
+  // 指标列表
+  KeyResult = () => {
+    const indexs = this.state.queto
+    const lists = indexs.map((element, index) => (
+      <div className="KeyResult" key={element.id}>
+        <div className="key_res_info">
+          <Input
+            bordered={false}
+            value={element.name}
+            onChange={this.handleName.bind(this, index, 'name')}
+          ></Input>
+          <div className="key_res_act">
+            {/* 删除 */}
+            <div className="key_res_del">
+              {/* <Delete theme="outline" size="16" fill="currentColor" /> */}
+              <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
+            </div>
+            {/* 权重 */}
+            <div className="key_res_weight">
+              <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
+              <Popover placement="top" content={indexTip}>
+                <span style={{ marginLeft: '8px' }}>{'100%'}</span>
+              </Popover>
+            </div>
+            {/* 评分 */}
+            <div className="key_res_score">
+              <div className="score_input">
+                <Popover placement="topRight" content={tip}>
+                  <InputNumber
+                    min={0.0}
+                    max={1}
+                    stringMode
+                    bordered={false}
+                    value={element.score}
+                    onChange={this.handleName.bind(this, index, 'score')}
+                  ></InputNumber>
+                </Popover>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+    return <>{lists}</>
+  }
+
   render() {
-    let { target_name, progress } = this.state
+    let { target_name } = this.state
     return (
       <div className="ObjectiveCard">
         {/* 目标名称 */}
@@ -152,33 +231,7 @@ class Targrts extends React.Component {
           <div className="score">0.00</div>
         </div>
         {/* 指标内容 */}
-        <div className="KeyResult">
-          <div className="key_res_info">
-            <Input bordered={false}></Input>
-            <div className="key_res_act">
-              {/* 删除 */}
-              <div className="key_res_del">
-                {/* <Delete theme="outline" size="16" fill="currentColor" /> */}
-                <Dialog type="指标"></Dialog>
-              </div>
-              {/* 权重 */}
-              <div className="key_res_weight">
-                <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
-                <Popover placement="top" content={indexTip}>
-                  <span style={{ marginLeft: '8px' }}>{'100%'}</span>
-                </Popover>
-              </div>
-              {/* 评分 */}
-              <div className="key_res_score">
-                <div className="score_input">
-                  <Popover placement="topRight" content={tip}>
-                    <InputNumber min={0.0} max={1} stringMode bordered={false}></InputNumber>
-                  </Popover>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <this.KeyResult></this.KeyResult>
         {/* 进展 */}
         <div className="ObjectProgress">
           <div className="progress_header">

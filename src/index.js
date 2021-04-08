@@ -6,6 +6,6 @@ import App from './App.jsx'
 
 
 ReactDOM.render(
-  <App />,
+  <App></App>,
   document.getElementById('root')
 )
