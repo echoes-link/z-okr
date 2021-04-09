@@ -15,6 +15,9 @@ module.exports = {
       '@': path.resolve(__dirname, './src')
     }
   },
+  output: {
+    path: path.join(__dirname, '/docs')
+  },
   devServer: {
     hot: true,
     port: 9000,
