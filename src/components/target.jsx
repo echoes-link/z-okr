@@ -1,4 +1,15 @@
-import { Add, Bill, ChartPie, Delete, SortThree, Target } from '@icon-park/react'
+import {
+  Add,
+  Bill,
+  ChartPie,
+  Delete,
+  SortThree,
+  Target,
+  ArrowUp,
+  ArrowDown,
+  ToTop,
+  ToBottom
+} from '@icon-park/react'
 import { Button, Input, InputNumber, Modal, Popover } from 'antd'
 import React from 'react'
 import './index.scss'
@@ -13,7 +24,8 @@ const Dialog = props => {
   const showModal = () => setIsModalVisible(true)
   const handleOk = () => {
     setIsModalVisible(false)
-    props.delIndex(props.index)
+    props.type === '指标' && props.delIndex(props.index)
+    props.type === '目标' && props.delTar(props.index)
   }
   const handleCancel = () => setIsModalVisible(false)
   let button
@@ -52,14 +64,25 @@ const Dialog = props => {
   )
 }
 
+/**
+ * @description 调整指标弹窗
+ */
+const Weight = props => {
+  const [isModalVisible, setIsModalVisible] = React.useState(false)
+  const showModal = () => setIsModalVisible(true)
+
+  return <Modal visible={isModalVisible}></Modal>
+}
+
 class Targrts extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.obj_input = null // 目标ref
     this.state = {
       target_name: '', // 目标名称
       isFocus: false,
       progress: '',
+      edit_order: false, // 编辑顺序
       queto: [] // 指标
     }
   }
@@ -89,18 +112,27 @@ class Targrts extends React.Component {
             <Add theme="outline" size="16" fill="#aeafb2" />
             添加指标
           </Button>
-          <Button>
+          <Button onClick={this.changeOrder}>
             <SortThree theme="outline" size="16" fill="#aeafb2" strokeLinecap="square" />
-            更改指标顺序
+            {this.state.edit_order ? '保存指标顺序' : '更换指标顺序'}
           </Button>
           <Button onClick={() => this.setState({ isFocus: true })}>
             <Bill theme="outline" size="16" fill="#aeafb2" strokeLinecap="square" />
             填写进展
           </Button>
-          <Dialog type="目标"></Dialog>
+          <Dialog type="目标" delTar={this.props.del} index={this.props.index}></Dialog>
         </div>
       )
     }
+  }
+
+  /**
+   * @description 更换顺序
+   */
+  changeOrder = () => {
+    let isOrder = this.state.edit_order
+    isOrder = !isOrder
+    this.setState({ edit_order: isOrder })
   }
 
   /**
@@ -167,6 +199,7 @@ class Targrts extends React.Component {
   // 指标列表
   KeyResult = () => {
     const indexs = this.state.queto
+    let action
     const lists = indexs.map((element, index) => (
       <div className="KeyResult" key={element.id}>
         <div className="key_res_info">
@@ -175,35 +208,60 @@ class Targrts extends React.Component {
             value={element.name}
             onChange={this.handleName.bind(this, index, 'name')}
           ></Input>
-          <div className="key_res_act">
-            {/* 删除 */}
-            <div className="key_res_del">
-              {/* <Delete theme="outline" size="16" fill="currentColor" /> */}
-              <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
-            </div>
-            {/* 权重 */}
-            <div className="key_res_weight">
-              <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
-              <Popover placement="top" content={indexTip}>
-                <span style={{ marginLeft: '8px' }}>{'100%'}</span>
-              </Popover>
-            </div>
-            {/* 评分 */}
-            <div className="key_res_score">
-              <div className="score_input">
-                <Popover placement="topRight" content={tip}>
-                  <InputNumber
-                    min={0.0}
-                    max={1}
-                    stringMode
-                    bordered={false}
-                    value={element.score}
-                    onChange={this.handleName.bind(this, index, 'score')}
-                  ></InputNumber>
-                </Popover>
+          {this.state.edit_order ? (
+            <div className="key_res_order">
+              <div className={index === 0 ? 'key_res_order_not' : 'key_res_order_allow'}>
+                <ToTop theme="outline" size="16" fill="currentColor" />
+              </div>
+              <div className={index === 0 ? 'key_res_order_not' : 'key_res_order_allow'}>
+                <ArrowUp theme="outline" size="16" fill="currentColor" />
+              </div>
+              <div
+                className={
+                  index === indexs.length - 1 ? 'key_res_order_not' : 'key_res_order_allow'
+                }
+              >
+                <ArrowDown theme="outline" size="16" fill="currentColor" />
+              </div>
+              <div
+                className={
+                  index === indexs.length - 1 ? 'key_res_order_not' : 'key_res_order_allow'
+                }
+              >
+                <ToBottom theme="outline" size="16" fill="currentColor" />
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="key_res_act">
+              {/* 删除 */}
+              <div className="key_res_del">
+                {/* <Delete theme="outline" size="16" fill="currentColor" /> */}
+                <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
+              </div>
+              {/* 权重 */}
+              <div className="key_res_weight">
+                <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
+                <Popover placement="top" content={indexTip}>
+                  <span style={{ marginLeft: '8px' }}>{'100%'}</span>
+                </Popover>
+              </div>
+              {/* 评分 */}
+              <div className="key_res_score">
+                <div className="score_input">
+                  <Popover placement="topRight" content={tip}>
+                    <InputNumber
+                      min={0.0}
+                      max={1}
+                      stringMode
+                      bordered={false}
+                      value={element.score}
+                      onChange={this.handleName.bind(this, index, 'score')}
+                    ></InputNumber>
+                  </Popover>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     ))

@@ -110,6 +110,21 @@ $purple: #494bbf;
           line-height: 20px;
         }
       }
+      .key_res_order {
+        @include flex(flex-start);
+        .key_res_order_allow {
+          color: #333;
+          cursor: pointer;
+        }
+        .key_res_order_not {
+          color: gray;
+          cursor: not-allowed;
+        }
+        .i-icon {
+          margin-left: 16px;
+          line-height: 1;
+        }
+      }
       .key_res_act {
         @include flex(center);
         & > div {
