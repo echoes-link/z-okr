@@ -71,11 +71,12 @@ $purple: #494bbf;
   // 输入框聚焦态
   .focus-input {
     border-radius: 4px;
-    border-color: $purple;
+    border-color: $purple !important;
   }
   // 指标部分
   .KeyResult {
     position: relative;
+    border: 1px solid transparent;
     &::after {
       @include front('', absolute, #ebecf0);
       left: 40px;
@@ -266,6 +267,19 @@ $purple: #494bbf;
   flex-direction: column;
   justify-content: space-between;
   border-radius: 8px !important;
+  .ant-modal-header {
+    @include flex(center);
+    justify-content: space-between;
+    padding: 18px 32px !important;
+    flex-shrink: 0;
+    height: 64px;
+    .ant-modal-title {
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 500;
+      color: #333;
+    }
+  }
   .ant-modal-footer {
     display: flex;
     justify-content: flex-end;
@@ -289,6 +303,14 @@ $purple: #494bbf;
       color: #fff;
       &:hover {
         background: rgba(73, 75, 191, 0.85);
+      }
+    }
+  }
+  // 权重弹窗
+  .weight_modal {
+    .ant-modal-content {
+      .ant-modal-footer {
+        justify-content: space-between !important;
       }
     }
   }

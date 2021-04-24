@@ -71,8 +71,37 @@ const Dialog = props => {
 const Weight = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false)
   const showModal = () => setIsModalVisible(true)
+  const handleCancel = () => setIsModalVisible(false)
 
-  return <Modal visible={isModalVisible}></Modal>
+  let button = (
+    <div className="key_res_weight" onClick={showModal}>
+      <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
+      <Popover placement="top" content={indexTip}>
+        <span style={{ marginLeft: '8px' }}>{'100%'}</span>
+      </Popover>
+    </div>
+  )
+  return (
+    <>
+      {button}
+      <Modal
+        className="weight_modal"
+        visible={isModalVisible}
+        okText="确认"
+        cancelText="取消"
+        centered={true}
+        title="指标权重"
+        onCancel={handleCancel}
+        footer={[
+          <span>权重总计：100%</span>,
+          <span>
+            <Button>取消</Button>
+            <Button type="primary">确认</Button>
+          </span>
+        ]}
+      ></Modal>
+    </>
+  )
 }
 
 class Targrts extends React.Component {
@@ -208,6 +237,8 @@ class Targrts extends React.Component {
             bordered={false}
             value={element.name}
             onChange={this.handleName.bind(this, index, 'name')}
+            onFocus={e => e.target.parentElement.parentElement.classList.add('focus-input')}
+            onBlur={e => e.target.parentElement.parentElement.classList.remove('focus-input')}
           ></Input>
           {this.state.edit_order ? (
             <div className="key_res_order">
@@ -240,12 +271,13 @@ class Targrts extends React.Component {
                 <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
               </div>
               {/* 权重 */}
-              <div className="key_res_weight">
+              {/* <div className="key_res_weight">
                 <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
                 <Popover placement="top" content={indexTip}>
                   <span style={{ marginLeft: '8px' }}>{'100%'}</span>
                 </Popover>
-              </div>
+              </div> */}
+              <Weight></Weight>
               {/* 评分 */}
               <div className="key_res_score">
                 <div className="score_input">
