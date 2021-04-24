@@ -14,6 +14,7 @@ import { Button, Input, InputNumber, Modal, Popover } from 'antd'
 import React from 'react'
 import './index.scss'
 const { TextArea } = Input
+import dels from '../../static/del.png'
 
 const tip = <p>双月结束时填写指标得分,分数再0.0~1之间</p>
 const indexTip = <div>点击填写指标权重</div>
@@ -52,7 +53,7 @@ const Dialog = props => {
         okText={props.type === '目标' ? '是' : '确认'}
         cancelText={props.type === '目标' ? '否' : '取消'}
       >
-        <img src="/static/del.png" width="100" height="100" style={{ marginRight: '24px' }} />
+        <img src={dels} width="100" height="100" style={{ marginRight: '24px' }} />
         <div>
           <div style={{ fontSize: '20px', fontWeight: 500 }}>删除{props.type}</div>
           <div style={{ marginTop: '8px', lineHeight: '1.5', fontSize: '16px', color: '#99' }}>

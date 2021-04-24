@@ -15,8 +15,10 @@ module.exports = {
       '@': path.resolve(__dirname, './src')
     }
   },
+  // entry: './src/index.js',
   output: {
-    path: path.join(__dirname, '/docs')
+    path: path.join(__dirname, '/docs'),
+    // publicPath: './'
   },
   devServer: {
     hot: true,
@@ -51,7 +53,12 @@ module.exports = {
       // 图片
       {
         test: /\.(png|svg|jpg|gif|jpeg)$/,
-        loader: 'file-loader'
+        loader: 'url-loader',
+        options: {
+          name: '[name].ext',
+          publicPath: './',
+          limit: 10000
+        }
       },
       // 字体
       {

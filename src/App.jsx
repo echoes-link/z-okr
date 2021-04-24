@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './style/index.scss'
 import { Plus } from '@icon-park/react'
 import Target from './components/target.jsx'
+import tar_png from '../static/target.png'
 
 class App extends Component {
   constructor() {
@@ -48,7 +49,7 @@ class App extends Component {
           <section>
             <header></header>
             <div className="CustomPageTitle">
-              <img src="../static/target.png" />
+              <img src={tar_png} />
               <span>目标</span>
             </div>
             <div className="content-wrapper">
