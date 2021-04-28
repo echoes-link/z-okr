@@ -46,12 +46,19 @@ const Dialog = props => {
       <Modal
         visible={isModalVisible}
         bodyStyle={{ padding: '64px 32px 24px', display: 'flex', alignItems: 'flex-start' }}
+        width={520}
         onOk={handleOk}
         onCancel={handleCancel}
         closable={false}
         centered={true}
-        okText={props.type === '目标' ? '是' : '确认'}
-        cancelText={props.type === '目标' ? '否' : '取消'}
+        footer={[
+          <div style={{ textAlign: 'right', flex: 1 }}>
+            <Button onClick={handleCancel}>{props.type === '目标' ? '否' : '取消'}</Button>
+            <Button type="primary" onClick={handleOk}>
+              {props.type === '目标' ? '是' : '确认'}
+            </Button>
+          </div>
+        ]}
       >
         <img src={dels} width="100" height="100" style={{ marginRight: '24px' }} />
         <div>
@@ -72,6 +79,7 @@ const Weight = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false)
   const showModal = () => setIsModalVisible(true)
   const handleCancel = () => setIsModalVisible(false)
+  const handleOk = () => {}
 
   let button = (
     <div className="key_res_weight" onClick={showModal}>
@@ -81,25 +89,46 @@ const Weight = props => {
       </Popover>
     </div>
   )
+  // 指标列表
+  let weight_list = props.list.map((e, i) => (
+    <div style={{ marginBottom: '24px' }} key={e.id}>
+      <div className="weight_header">
+        <div className="weight_header_title">{`指标${i + 1}`}</div>
+        <div className="weight_header_power">
+          <ChartPie theme="outline" size="16" fill="#999" strokeLinecap="square" />
+          <div className="weight_header_power_input">
+            <Input type="text" value={e.weight} bordered={false}></Input>
+          </div>
+          <span className="input_power">{e.weight}</span>%
+        </div>
+      </div>
+      <div className="weight_content">{e.name ? e.name : '未填写'}</div>
+    </div>
+  ))
+
   return (
     <>
       {button}
       <Modal
         className="weight_modal"
         visible={isModalVisible}
-        okText="确认"
-        cancelText="取消"
         centered={true}
         title="指标权重"
+        width={640}
+        bodyStyle={{ margin: '21px 0 24 0', padding: '0 32px' }}
         onCancel={handleCancel}
-        footer={[
-          <span>权重总计：100%</span>,
-          <span>
-            <Button>取消</Button>
-            <Button type="primary">确认</Button>
-          </span>
-        ]}
-      ></Modal>
+        footer={
+          <>
+            <span>权重总计：100%</span>
+            <span>
+              <Button onClick={handleCancel}>取消</Button>
+              <Button type="primary">确认</Button>
+            </span>
+          </>
+        }
+      >
+        {weight_list}
+      </Modal>
     </>
   )
 }
@@ -181,7 +210,7 @@ class Targrts extends React.Component {
     indexs.push({
       name: '',
       score: 0.0,
-      weight: '100.00%',
+      weight: '100.00',
       id: Math.random().toString(36).substr(2)
     })
     this.setState({ queto: indexs })
@@ -240,6 +269,7 @@ class Targrts extends React.Component {
             onFocus={e => e.target.parentElement.parentElement.classList.add('focus-input')}
             onBlur={e => e.target.parentElement.parentElement.classList.remove('focus-input')}
           ></Input>
+          {/* 下方操作按钮组 */}
           {this.state.edit_order ? (
             <div className="key_res_order">
               <div className={index === 0 ? 'key_res_order_not' : 'key_res_order_allow'}>
@@ -271,13 +301,7 @@ class Targrts extends React.Component {
                 <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
               </div>
               {/* 权重 */}
-              {/* <div className="key_res_weight">
-                <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
-                <Popover placement="top" content={indexTip}>
-                  <span style={{ marginLeft: '8px' }}>{'100%'}</span>
-                </Popover>
-              </div> */}
-              <Weight></Weight>
+              <Weight list={this.state.queto}></Weight>
               {/* 评分 */}
               <div className="key_res_score">
                 <div className="score_input">
