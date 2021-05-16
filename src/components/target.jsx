@@ -1,7 +1,6 @@
 import {
   Add,
   Bill,
-  ChartPie,
   Delete,
   SortThree,
   Target,
@@ -15,9 +14,9 @@ import React from 'react'
 import './index.scss'
 const { TextArea } = Input
 import dels from '../../static/del.png'
+import Weight from './weight.jsx'
 
 const tip = <p>双月结束时填写指标得分,分数再0.0~1之间</p>
-const indexTip = <div>点击填写指标权重</div>
 
 // 删除弹窗，自定义hook
 const Dialog = props => {
@@ -67,67 +66,6 @@ const Dialog = props => {
             删除目标后不可恢复，是否继续？
           </div>
         </div>
-      </Modal>
-    </>
-  )
-}
-
-/**
- * @description 调整指标弹窗
- */
-const Weight = props => {
-  const [isModalVisible, setIsModalVisible] = React.useState(false)
-  const showModal = () => setIsModalVisible(true)
-  const handleCancel = () => setIsModalVisible(false)
-  const handleOk = () => {}
-
-  let button = (
-    <div className="key_res_weight" onClick={showModal}>
-      <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
-      <Popover placement="top" content={indexTip}>
-        <span style={{ marginLeft: '8px' }}>{'100%'}</span>
-      </Popover>
-    </div>
-  )
-  // 指标列表
-  let weight_list = props.list.map((e, i) => (
-    <div style={{ marginBottom: '24px' }} key={e.id}>
-      <div className="weight_header">
-        <div className="weight_header_title">{`指标${i + 1}`}</div>
-        <div className="weight_header_power">
-          <ChartPie theme="outline" size="16" fill="#999" strokeLinecap="square" />
-          <div className="weight_header_power_input">
-            <Input type="text" value={e.weight} bordered={false}></Input>
-          </div>
-          <span className="input_power">{e.weight}</span>%
-        </div>
-      </div>
-      <div className="weight_content">{e.name ? e.name : '未填写'}</div>
-    </div>
-  ))
-
-  return (
-    <>
-      {button}
-      <Modal
-        className="weight_modal"
-        visible={isModalVisible}
-        centered={true}
-        title="指标权重"
-        width={640}
-        bodyStyle={{ margin: '21px 0 24 0', padding: '0 32px' }}
-        onCancel={handleCancel}
-        footer={
-          <>
-            <span>权重总计：100%</span>
-            <span>
-              <Button onClick={handleCancel}>取消</Button>
-              <Button type="primary">确认</Button>
-            </span>
-          </>
-        }
-      >
-        {weight_list}
       </Modal>
     </>
   )
@@ -210,7 +148,7 @@ class Targrts extends React.Component {
     indexs.push({
       name: '',
       score: 0.0,
-      weight: '100.00',
+      weight: 100,
       id: Math.random().toString(36).substr(2)
     })
     this.setState({ queto: indexs })
@@ -252,6 +190,12 @@ class Targrts extends React.Component {
     const list = this.state.queto
     if (name === 'name') list[index][name] = e.target.value
     else if (name === 'score') list[index][name] = e
+    this.setState({ queto: list })
+  }
+
+  changeWeight = (index, value) => {
+    const list = this.state.queto
+    list[index]['weight'] = value
     this.setState({ queto: list })
   }
 
@@ -301,7 +245,7 @@ class Targrts extends React.Component {
                 <Dialog type="指标" index={index} delIndex={this.delQueto}></Dialog>
               </div>
               {/* 权重 */}
-              <Weight list={this.state.queto}></Weight>
+              <Weight list={this.state.queto} changeWeight={this.changeWeight}></Weight>
               {/* 评分 */}
               <div className="key_res_score">
                 <div className="score_input">

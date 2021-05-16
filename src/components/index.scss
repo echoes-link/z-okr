@@ -333,7 +333,7 @@ $purple: #494bbf;
         background-repeat: no-repeat;
         transition: background-size 0.2s ease;
         &:focus {
-          background-size: 0 2px 100% 2px;
+          background-size: 0 2px, 100% 2px !important;
         }
         .weight_header_power_input {
           border: none !important;
