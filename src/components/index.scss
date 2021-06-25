@@ -332,7 +332,7 @@ $purple: #494bbf;
         background-position: 100% 100%, 0 100%;
         background-repeat: no-repeat;
         transition: background-size 0.2s ease;
-        &:focus {
+        &:focus-within {
           background-size: 0 2px, 100% 2px !important;
         }
         .weight_header_power_input {

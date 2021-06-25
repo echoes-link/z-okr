@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ChartPie } from '@icon-park/react'
 import { Popover, Input, Modal, Button } from 'antd'
 
-const indexTip = <div>点击填写指标权重</div>
+const INDEX_TIP = <div>点击填写指标权重</div>
 
 /**
  * @description 调整指标弹窗
@@ -13,25 +13,33 @@ const Weight = props => {
   const handleCancel = () => setIsModalVisible(false)
   const handleOk = () => {}
 
+  const [weightList, setWeightList] = React.useState(props.list ?? [])
   let button = (
     <div className="key_res_weight" onClick={showModal}>
       <ChartPie theme="outline" size="16" fill="currentColor" strokeLinecap="square" />
-      <Popover placement="top" content={indexTip}>
+      <Popover placement="top" content={INDEX_TIP}>
         <span style={{ marginLeft: '8px' }}>{'100%'}</span>
       </Popover>
     </div>
   )
 
   const handleWight = (index, e) => {
-    console.log(index, e)
-    props.changeWeight(index, Number(e.target.value))
+    // const reg = /^\d+(?:\.\d{0,2})?/
+    const reg = /[^1-9]{0,1}(\d*(?:\.\d{0,2})?).*$/g
+    const { value } = e.target
+    const arr = weightList
+    arr[index].weight = value
+    setWeightList(arr)
+    // value = value.replace(/[^1-9]{0,1}(\d*(?:\.\d{0,2})?).*$/g, '$1')
+    // if (Number(value) && reg.test(value)) {
+    //   console.log(1)
+    //   //   console.log(value)
+    //   // props.changeWeight(index, Number(value))
+    // }
   }
-  // const map_list = props.list.map(e => {
-  //   return { weight: e.weight, name: e.name }
-  // })
-  // console.log(map_list)
+
   // 指标列表
-  let weight_list = props.list.map((e, i) => (
+  let weight_list = weightList.map((e, i) => (
     <div style={{ marginBottom: '24px' }} key={e.id}>
       <div className="weight_header">
         <div className="weight_header_title">{`指标${i + 1}`}</div>
@@ -39,14 +47,20 @@ const Weight = props => {
           <ChartPie theme="outline" size="16" fill="#999" strokeLinecap="square" />
           <div className="weight_header_power_input">
             <Input
-              type="text"
               value={e.weight}
+              type="text"
               bordered={false}
               placeholder={e.weight}
               onChange={e => {
                 handleWight(i, e)
               }}
             ></Input>
+            {/* <input
+              type="text"
+              onInput={e => {
+                e.target.value = e.target.value.replace(/[^1-9]{0,1}(\d*(?:\.\d{0,2})?).*$/g, '$1')
+              }}
+            /> */}
           </div>
           <span className="input_power">{e.weight}</span>%
         </div>
